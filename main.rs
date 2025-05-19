@@ -7,7 +7,7 @@ async fn call() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!(" Server running at http://127.0.0.1:5000");
+    println!(" Server running on port 5000");
     
     HttpServer::new(|| {
         App::new()
