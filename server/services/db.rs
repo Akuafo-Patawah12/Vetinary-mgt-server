@@ -28,6 +28,20 @@ impl database {
         owner,
         booking
     }
+
+
  }
+
+ pub async fn create_owner(&self, owner: Owner) -> Result<InsertOneResult, Error> {
+   let result = self
+         .owner
+         .insert_one(owner, None)
+         .await
+         .Ok()
+         .expect("Failed to create owner");
+
+        Ok(result)
+ }
+
 }
 

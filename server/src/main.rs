@@ -1,4 +1,4 @@
-use actix_web::{get, App, HttpServer, Responder, HttpResponse};
+use actix_web::{get,web, App, HttpServer, Responder, HttpResponse};
 
 #[get("/hello")]
 async fn call() -> impl Responder {
@@ -13,6 +13,7 @@ async fn main() -> std::io::Result<()> {
     let db_data = web::Data::new(db);
     HttpServer::new(|| {
         App::new()
+            .app_data(db_data.clone())
             .service(call) // register route
     })
     .bind(("127.0.0.1", 5000))?
