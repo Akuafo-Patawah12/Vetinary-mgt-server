@@ -1,5 +1,5 @@
 use mongodb::{bson::{doc, from_document, oid::ObjectId, DateTime}, Collection};
-
+use futures_util::stream::StreamExt;
 use crate::models::{booking_model::{Booking, FullBooking}, dog_model::Dog, owner_model::Owner};
 use std::env;
 use mongodb::results::{ UpdateResult, InsertOneResult};
@@ -41,9 +41,9 @@ impl Database  {
     pub async fn create_owner(&self, owner: Owner) -> Result<InsertOneResult, Error> {
     let result = self
             .owner
-            .insert_one(owner, None)
+            .insert_one(owner)
             .await
-            .Ok()
+            .ok()
             .expect("Failed to create owner");
 
             Ok(result)
@@ -51,9 +51,9 @@ impl Database  {
     pub async fn create_booking(&self, booking: Booking) -> Result<InsertOneResult, Error> {
     let result = self
             .booking
-            .insert_one(booking, None)
+            .insert_one(booking)
             .await
-            .Ok()
+            .ok()
             .expect("Failed to create owner");
 
             Ok(result)
@@ -62,9 +62,9 @@ impl Database  {
     pub async fn create_dog(&self, dog: Dog) -> Result<InsertOneResult, Error> {
     let result = self
             .dog
-            .insert_one(dog, None)
+            .insert_one(dog)
             .await
-            .Ok()
+            .ok()
             .expect("Failed to create dog");
 
             Ok(result)
@@ -79,66 +79,78 @@ impl Database  {
                 "$set": doc! {
                     "cancelled": true
                 }
-            }, None)
+            })
             .await
-            .Ok()
+            .ok()
             .expect("Failed to cancel booking");
         
         Ok(result)
         }
 
 
-        pub async fn get_bookings (&self , owner_id: &str) -> Result<Vec<FullBooking>, Error> {
-            let now: SystemTime = Utc::now().into();
-            let result = self
-            .booking
-            .aggregate(vec![
+        pub async fn get_bookings(&self, owner_id: &str) -> Result<Vec<FullBooking>, Error> {
+    let now: SystemTime = Utc::now().into();
+
+    let mut result = self
+        .booking
+        .aggregate(
+            vec![
                 doc! {
                     "$match": {
-                        "owner": ObjectId::from_str(owner_id).expect("failed to parse owner id"),
+                        "owner": ObjectId::from_str(owner_id)
+                            .expect("failed to parse owner id"),
                         "start_time": {
                             "$gte": DateTime::from_system_time(now)
                         }
                     }
                 },
                 doc! {
-                    "$lookup": doc! {
+                    "$lookup": {
                         "from": "owner",
                         "localField": "owner",
                         "foreignField": "_id",
                         "as": "owner_info"
-                    }, 
+                    }
                 },
                 doc! {
-                    "unwind": doc! {
+                    "$unwind": {
                         "path": "$owner_info"
                     }
                 },
                 doc! {
-                    "$lookup": doc! {
+                    "$lookup": {
                         "from": "dog",
                         "localField": "owner_info._id",
                         "foreignField": "owner",
                         "as": "dog_info"
-                    }, 
+                    }
                 },
-            ],None)
-            .await
-            .Ok()
-            .expect("Failed to get bookings");
+            ]
+            
+        )
+        .await?;
+       
 
-        let mut Bookings: Vec<FullBooking> = Vec::new();
+    let mut bookings: Vec<FullBooking> = Vec::new();
 
-        while let Some(result) = result.next().await{
-            match result {
-                Ok(doc) => {
-                    let booking = from_document(doc)
-                        .expect("")
-                }
+    while let Some(result) = result.next().await {
+        match result {
+            Ok(doc) => {
+                let booking = from_document(doc)
+                    .expect("Failed to parse booking document");
+                bookings.push(booking);
+            }
+            Err(err) => {
+                return Err(err.into()); // Handle the error gracefully
             }
         }
     }
- }
+
+    Ok(bookings) // ✅ Final return
+}
+
+    }
+ 
 
 
 
