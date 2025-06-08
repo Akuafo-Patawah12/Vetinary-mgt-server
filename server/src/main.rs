@@ -1,4 +1,4 @@
-use actix_web::{get, patch, post, App, HttpServer, Responder, HttpResponse};
+use actix_web::{get, App, HttpServer, Responder, HttpResponse};
 
 #[get("/hello")]
 async fn call() -> impl Responder {
