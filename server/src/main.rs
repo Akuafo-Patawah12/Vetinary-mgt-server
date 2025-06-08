@@ -9,6 +9,8 @@ async fn call() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     println!(" Server running on port 5000");
     
+    let db = database::init().await;
+    let db_data = web::Data::new(db);
     HttpServer::new(|| {
         App::new()
             .service(call) // register route

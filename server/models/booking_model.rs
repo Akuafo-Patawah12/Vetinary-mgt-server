@@ -1,4 +1,4 @@
-use mongo_db::bson::{oid::ObjectId,DateTime}
+use mongodb::bson::{oid::ObjectId,DateTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -8,7 +8,7 @@ pub struct Booking {
      pub owner: ObjectId,
      pub room_id: i32,
      pub start_time: DateTime, // Use a proper date/time type in production
-     pub duration _in_munites: u8,   // Use a proper date/time type in production
+     pub duration_in_munites: u8,   // Use a proper date/time type in production
      pub cancelled: bool,
 }
 
@@ -16,7 +16,7 @@ pub struct Booking {
 pub struct Booking_request {
      pub owner: ObjectId,
      pub start_time: DateTime, // Use a proper date/time type in production
-     pub duration _in_munites: u8,
+     pub duration_in_munites: u8,
 }
 
 impl TryFrom<Booking_request> for Booking {

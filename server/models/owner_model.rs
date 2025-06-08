@@ -1,4 +1,4 @@
-use mongo_db::bson::{oid::ObjectId,DateTime}
+use mongo_db::bson::{oid::ObjectId,DateTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -24,10 +24,10 @@ impl TryFrom<Owner_request> for Booking {
      fn try_from(item: Owner_request) -> Result<Self, Self::Error> {
 
             Ok(Self {
-                pub _id: ObjectId::new(),
-                pub name: item.name,
-                pub email: item.email,
-                pub address: item.address,
+                _id: ObjectId::new(),
+                name: item.name,
+                email: item.email,
+                address: item.address,
                 
             })
      }

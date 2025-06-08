@@ -1,4 +1,4 @@
-use mongo_db::bson::{oid::ObjectId,DateTime}
+use mongo_db::bson::{oid::ObjectId,DateTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -25,13 +25,13 @@ impl TryFrom<Dog_request> for Booking {
      fn try_from(item: Dog_request) -> Result<Self, Self::Error> {
 
             Ok(Self {
-                pub _id: ObjectId::new(),
-                pub owner: ObjectId::parser_str(&item.owner).expect("Failed to parse owner"),
-                pub name: item.name,
-                pub age: item.age,
-                pub breed: item.breed,
+                 _id: ObjectId::new(),
+                 owner: ObjectId::parser_str(&item.owner).expect("Failed to parse owner"),
+                 name: item.name,
+                 age: item.age,
+                 breed: item.breed,
                 
-            })
+            });
      }
     
 }
