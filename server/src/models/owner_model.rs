@@ -1,4 +1,4 @@
-use mongo_db::bson::{oid::ObjectId,DateTime};
+use mongodb::bson::{oid::ObjectId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -11,17 +11,17 @@ pub struct Owner {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Owner_request {
+pub struct OwnerRequest {
      pub _id: ObjectId,
      pub name: String,
      pub email: String,
      pub address: String,
 }
 
-impl TryFrom<Owner_request> for Booking {
+impl TryFrom<OwnerRequest> for Owner {
     type Error = Box<dyn std::error::Error>;
      
-     fn try_from(item: Owner_request) -> Result<Self, Self::Error> {
+     fn try_from(item: OwnerRequest) -> Result<Self, Self::Error> {
 
             Ok(Self {
                 _id: ObjectId::new(),

@@ -1,5 +1,11 @@
 use actix_web::{get,web, App, HttpServer, Responder, HttpResponse};
 
+mod services;
+mod models;
+
+use services::db::Database;
+
+
 #[get("/hello")]
 async fn call() -> impl Responder {
     HttpResponse::Ok().body("parcch!")
@@ -9,9 +15,9 @@ async fn call() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     println!(" Server running on port 5000");
     
-    let db = database::init().await;
+    let db = Database::init().await;
     let db_data = web::Data::new(db);
-    HttpServer::new(|| {
+    HttpServer::new( move || {
         App::new()
             .app_data(db_data.clone())
             .service(call) // register route
