@@ -18,10 +18,10 @@ pub struct Owner_request {
      pub address: String,
 }
 
-impl TryFrom<Booking_request> for Booking {
+impl TryFrom<Owner_request> for Booking {
     type Error = Box<dyn std::error::Error>;
      
-     fn try_from(item: Booking_request) -> Result<Self, Self::Error> {
+     fn try_from(item: Owner_request) -> Result<Self, Self::Error> {
 
             Ok(Self {
                 pub _id: ObjectId::new(),
