@@ -59,6 +59,8 @@ impl Database  {
             Ok(result)
     }
 
+  
+
     pub async fn create_dog(&self, dog: Dog) -> Result<InsertOneResult, Error> {
     let result = self
             .dog
