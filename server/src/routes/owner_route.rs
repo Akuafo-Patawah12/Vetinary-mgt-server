@@ -1,6 +1,5 @@
 use actix_web::{ post ,web::{Data, Json}, HttpResponse};
-use mongodb::Database;
-
+use crate::services::db::Database;
 use crate::models::{ owner_model::{Owner,OwnerRequest}};
 
 
@@ -10,8 +9,9 @@ use crate::models::{ owner_model::{Owner,OwnerRequest}};
 pub async fn create_owner(db: Data<Database>, request: Json<OwnerRequest>) -> HttpResponse {
    match db
        .create_owner(
-          Owner::try_from(OwnerRequest {
-              name: request.owner.clone(),
+          Owner::try_from( OwnerRequest {
+              _id: request._id.clone(),
+              name: request.name.clone(),
               email: request.email.clone(),
               address: request.address.clone(),
           })
@@ -20,7 +20,7 @@ pub async fn create_owner(db: Data<Database>, request: Json<OwnerRequest>) -> Ht
        ).await {
        Ok(owner) => HttpResponse::Ok().json(owner),
          Err(err) => {
-              eprintln!("Error creating owner: {}", e);
+              eprintln!("Error creating owner: {}", err);
               HttpResponse::InternalServerError().body(err.to_string())
          }
         }

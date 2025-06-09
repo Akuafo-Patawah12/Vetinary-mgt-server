@@ -6,7 +6,7 @@ mod routes;
 
 use services::db::Database;
 
-use crate::routes::{booking_route::{cancel_bookings, create_dog, get_bookings, create_bookings}, owner_route::create_owner};
+use crate::routes::{booking_route::{cancel_bookings, get_bookings, create_booking}, owner_route::{create_owner} , dog_route::create_dog};
 
 
 #[get("/hello")]
@@ -26,9 +26,9 @@ async fn main() -> std::io::Result<()> {
             .service(call) // register route
             .service(create_dog)
             .service(create_owner)
-            .service(create_bookings)
+            .service(create_booking)
             .service(get_bookings)
-            .service(cancel_bookings(db, path))
+            .service(cancel_bookings)
     })
     .bind(("127.0.0.1", 5000))?
     .run()

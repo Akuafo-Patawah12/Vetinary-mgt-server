@@ -21,6 +21,11 @@ pub struct BookingRequest {
      pub duration_in_munites: u8,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct BookingQuery {
+     pub owner_id: String,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FullBooking {
      pub _id: ObjectId,

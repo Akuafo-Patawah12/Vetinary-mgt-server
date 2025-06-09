@@ -1,5 +1,5 @@
 use actix_web::{ post ,web::{Data, Json}, HttpResponse};
-use mongodb::Database;
+use crate::services::db::Database;
 
 use crate::models::dog_model::{Dog,DogRequest};
 
@@ -21,7 +21,7 @@ pub async fn create_dog(db: Data<Database>, request: Json<DogRequest>) -> HttpRe
        ).await {
        Ok(dog) => HttpResponse::Ok().json(dog),
          Err(err) => {
-              eprintln!("Error creating dog: {}", e);
+              eprintln!("Error creating dog: {}", err);
               HttpResponse::InternalServerError().body(err.to_string())
          }
         }
