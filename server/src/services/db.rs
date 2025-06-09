@@ -148,7 +148,7 @@ impl Database  {
         }
     }
 
-    Ok(bookings) // ✅ Final return
+    Ok(bookings) 
 }
 
     }
