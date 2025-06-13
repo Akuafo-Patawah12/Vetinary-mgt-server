@@ -18,12 +18,12 @@ impl Database  {
     pub async fn init() -> Self {
             let url = match env::var("mongo_url"){
             Ok(v) => v.to_string(),
-            Err(_) => "mongodb://localhost:27017".to_string(),
+            Err(_) => "mongodb://127.0.0.1:27017/rustApp".to_string(),
             };
         
 
         let client = mongodb::Client::with_uri_str(&url).await.unwrap();
-        let db = client.database("vent_booking");
+        let db = client.database("vet_booking");
 
         let dog: Collection<Dog> = db.collection("dog");
         let owner: Collection<Owner> = db.collection("owner");
